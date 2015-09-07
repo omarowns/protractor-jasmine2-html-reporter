@@ -57,11 +57,12 @@ function rmdir(dir) {
                 // rmdir recursively
                 rmdir(filename);
             } else {
-                // rm fiilename
-                fs.unlinkSync(filename);
+                // rm filename
+                if(filename !== "test/reports/.gitkeep" && filename !== "tests/reports/screenshots/.gitkeep") {
+                    fs.unlinkSync(filename);
+                }
             }
         }
-        fs.rmdirSync(dir);
     }catch (e) { log("problem trying to remove a folder"); }
 };
 
@@ -147,24 +148,12 @@ function Jasmine2HTMLReporter(options) {
         totalSpecsExecuted++;
 
         //Take screenshots taking care of the configuration
-        if ((self.takeScreenshots && !self.takeScreenshotsOnlyOnFailures) ||
-            (self.takeScreenshots && self.takeScreenshotsOnlyOnFailures && isFailed(spec))) {
+        if (isFailed(spec)) {
             spec.screenshot = hat() + '.png';
             browser.takeScreenshot().then(function (png) {
-                browser.getCapabilities().then(function (capabilities) {
-                    var screenshotPath;
-
-
-                    //Folder structure and filename
-                    screenshotPath = path.join(self.savePath + self.screenshotsFolder, spec.screenshot);
-
-                    mkdirp(path.dirname(screenshotPath), function (err) {
-                        if (err) {
-                            throw new Error('Could not create directory for ' + screenshotPath);
-                        }
-                        writeScreenshot(png, screenshotPath);
-                    });
-                });
+              var screenshotPath;
+              screenshotPath = path.join(self.savePath + self.screenshotsFolder, spec.screenshot);
+              writeScreenshot(png, screenshotPath);
             });
         }
 
