@@ -110,7 +110,7 @@ function Jasmine2HTMLReporter(options) {
         self.started = true;
 
         //Delete previous screenshoots
-        rmdir(self.savePath);
+        //rmdir(self.savePath);
 
     };
     self.suiteStarted = function(suite) {
